@@ -1,5 +1,5 @@
 const user =require("../modles/register")
-const  bookidgen=require("bookidgen")
+const bookidgen=require("bookidgen")
 let referralCodeGenerator = require('referral-code-generator')
 
 
@@ -28,11 +28,16 @@ const Register = async (req, res) => {
 
         const bonus = await user.findOne({referral_code:refercode})
         if (bonus){
-            let arr = [50, 100, 200]
-            const randomIndex = Math.floor(Math.random() * arr.length);
+          let item=50
+            let date= new Date;
+            if (date.getDate()+"/"+date.getMonth()=="26/01" || date.getDate()+"/"+date.getMonth()=="02/10" || date.getDate()+"/"+date.getMonth()=="15/08" ){
+              item=200
+            }else if(date.getDay()==0 || date.getDate()==6){
+              item=100
+            }
 
             // get random item
-            const item = arr[randomIndex];
+             
             let value= bonus.refferalBonus + item
             const bonusupdate= await user.findOneAndUpdate({referral_code:refercode},{refferalBonus:value})
         }
@@ -85,7 +90,3 @@ const getallUser = async (req, res) => {
   };
   module.exports={Register,getallUser,getUser}
 
-
-  // weekend 
-//   var dayOfWeek = yourDateObject.getDay();
-// var isWeekend = (dayOfWeek === 6) || (dayOfWeek  === 0);
